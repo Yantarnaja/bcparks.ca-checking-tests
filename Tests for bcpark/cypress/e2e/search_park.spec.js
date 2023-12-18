@@ -6,6 +6,7 @@ describe('check searsh', () => {
     beforeEach(() => {
         cy.visit('/');
     })
+    
     //Vérifier le filtre de recherche
     it('check search filter', () => {
         cy.contains('.menu-button--unselected', 'Find a park').click()
@@ -32,13 +33,35 @@ describe('check searsh', () => {
             .should('contain','Alouette Mountain', 'The Golden Ears')
     })
 
-    //Vérifier l'accessibilité du blog
+    //Trouver un parc à partir du champ de saisie
+    it('find a park from input field', () => {
+        cy.get('#park-search-typeahead').type('Dragon')
+        cy.get('.dropdown-menu').should('contain', 'Dragon Mountain Park').click()
+        cy.get('.search-results-list')
+            .should('contain','1')
+        cy.contains('.underline-hover', 'Dragon Mountain Park').click()
+        cy.get('.grey-background')
+            .should('contain', 'Park overview')
+    })
+
+    //Trouver un parc grâce au formulaire de recherche (indiquer la ville)
+    it.only('find a park using search form (enter city)', () => {
+        cy.get('#city-search-typeahead').type('Kelowna')
+        cy.get('.dropdown-menu').find('.dropdown-item').eq(1)
+            .should('contain', 'West')
+        cy.get('.MuiButtonBase-root').click()
+        cy.get('.result-count-text')
+            .should('contain', '28')
+    })
+
+    //Vérifier l'acce ssibilité du blog
     it('check blog accessibility', () => {
         cy.get('.home-footer')
         cy.get('a[href="https://engage.gov.bc.ca/bcparksblog/"]').click()
         cy.get ('.wp-block-column')
             .should('contain', 'Welcome to the BC Parks Blog!')
     })
+
     //Vérifier la description de la sécurité des animaux sauvages
     it('check wildlife safety description', () => {
         cy.contains('.menu-button--unselected','Plan your trip').click()
