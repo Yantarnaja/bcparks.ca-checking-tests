@@ -6,7 +6,7 @@ describe('check searsh', () => {
     beforeEach(() => {
         cy.visit('/');
     })
-    
+
     //Vérifier le filtre de recherche
     it('check search filter', () => {
         cy.contains('.menu-button--unselected', 'Find a park').click()
@@ -45,7 +45,7 @@ describe('check searsh', () => {
     })
 
     //Trouver un parc grâce au formulaire de recherche (indiquer la ville)
-    it.only('find a park using search form (enter city)', () => {
+    it('find a park using search form (enter city)', () => {
         cy.get('#city-search-typeahead').type('Kelowna')
         cy.get('.dropdown-menu').find('.dropdown-item').eq(1)
             .should('contain', 'West')
@@ -53,7 +53,21 @@ describe('check searsh', () => {
         cy.get('.result-count-text')
             .should('contain', '28')
     })
+    //vérifier l'autorisation d'utilisation du parc
+    it.only('check the park use-permit', () => {
+        cy.contains('.menu-button--unselected','Park-use permits').click()
+        cy.get('.menu-level--1')
+        cy.contains('.menu-button__title', 'Permit information').click()
+        cy.get('.no-gutters')
+            .should('contain', 'BC Parks park-use permit information')
+        cy.contains('.MuiBreadcrumbs-li', 'Park-use permits').click()
+        cy.get('.bcp-landing-intro__text').should('contain', 'Park-use permits')
+        cy.contains('.card-body', 'Travel trade').find('.card-button').click()
+        cy.get('.no-gutters').should('contain', 'BC Parks travel trade information')
+    
 
+        
+    })
     //Vérifier l'acce ssibilité du blog
     it('check blog accessibility', () => {
         cy.get('.home-footer')
